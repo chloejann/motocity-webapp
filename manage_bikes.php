@@ -154,7 +154,6 @@ $motorbikes = $stmt->fetchAll();
                             <td>$<?php echo $motorbike['cost_per_hour']; ?></td>
                             <td>
                                 <a href="manage_bikes.php?bike_code=<?php echo $motorbike['bike_code']; ?>" class="btn btn-primary">Edit</a>
-                                <a href="manage_bikes.php?bike_code=<?php echo $motorbike['bike_code']; ?>" class="btn btn-danger">Delete</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
