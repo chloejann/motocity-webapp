@@ -1,5 +1,5 @@
 <?php
-require_once 'inc/db.php';
+require_once 'inc/db.php';  // Include the database connection file
 
 // Fetch all available bikes
 $query = $pdo->query("SELECT * FROM motorbikes WHERE is_active = 1");
@@ -16,18 +16,16 @@ $motorbikes = $query->fetchAll();
 </head>
 <body>
     <header>
-        <div class="container">
-            <h1>MotoCity</h1>
-            <nav>
-                <a href="login.php">Login</a>
-                <a href="register.php">Register</a>
-            </nav>
-        </div>
+        <h1>Welcome to MotoCity</h1>
+        <nav>
+            <a href="login.php">Login</a> | 
+            <a href="register.php">Register</a>
+        </nav>
     </header>
 
-    <main class="container">
+    <section>
         <h2>Available Motorbikes</h2>
-        <table class="bike-table">
+        <table>
             <thead>
                 <tr>
                     <th>Bike Code</th>
@@ -49,12 +47,6 @@ $motorbikes = $query->fetchAll();
                 <?php endforeach; ?>
             </tbody>
         </table>
-    </main>
-
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 MotoCity. All Rights Reserved.</p>
-        </div>
-    </footer>
+    </section>
 </body>
 </html>
