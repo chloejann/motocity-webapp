@@ -1,16 +1,14 @@
 <?php
 session_start();
-if (!isset($_SESSION['user_id'])) {
+
+// Assuming user type is stored in session after login
+if (!isset($_SESSION['user_type'])) {
     header('Location: login.php');
     exit;
 }
 
-require_once '../inc/db.php';
-$user_id = $_SESSION['user_id'];
-$stmt = $pdo->prepare("SELECT * FROM users WHERE user_id = :user_id");
-$stmt->bindParam(':user_id', $user_id);
-$stmt->execute();
-$user = $stmt->fetch();
+$user_type = $_SESSION['user_type'];  // Retrieve the user type (ADMIN or USER)
+
 ?>
 
 <!DOCTYPE html>
@@ -19,42 +17,37 @@ $user = $stmt->fetch();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
     <header>
-        <h1>Welcome, <?php echo htmlspecialchars($user['first_name']); ?>!</h1>
-        <nav>
-            <a href="logout.php">Logout</a>
-        </nav>
+        <h1>Dashboard</h1>
+        <a href="logout.php" class="btn btn-ghost">Logout</a>
     </header>
-
-    <section>
-        <h2>Your Current Rentals</h2>
-        <?php
-        $stmt = $pdo->prepare("SELECT * FROM rentals WHERE user_id = :user_id AND status = 'RENTED'");
-        $stmt->bindParam(':user_id', $user_id);
-        $stmt->execute();
-        $rentals = $stmt->fetchAll();
-        ?>
-        <table>
-            <thead>
-                <tr>
-                    <th>Bike Code</th>
-                    <th>Start Time</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($rentals as $rental): ?>
-                <tr>
-                    <td><?php echo htmlspecialchars($rental['bike_code']); ?></td>
-                    <td><?php echo htmlspecialchars($rental['start_time']); ?></td>
-                    <td><a href="return.php?rental_id=<?php echo urlencode($rental['rental_id']); ?>">Return Bike</a></td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+    
+    <section class="dashboard-container">
+        <?php if ($user_type == 'ADMIN'): ?>
+            <div class="card">
+                <h2>Welcome, Admin</h2>
+                <p>As an admin, you can manage motorbikes and users.</p>
+                <div class="card-actions">
+                    <a href="manage_bikes.php" class="btn btn-primary">Manage Motorbikes</a>
+                    <a href="manage_users.php" class="btn btn-primary">Manage Users</a>
+                    <a href="view_rentals.php" class="btn btn-primary">View All Rentals</a>
+                </div>
+            </div>
+        <?php else: ?>
+            <div class="card">
+                <h2>Welcome, User</h2>
+                <p>As a user, you can rent and return motorbikes.</p>
+                <div class="card-actions">
+                    <a href="view_bikes.php" class="btn btn-primary">View Available Motorbikes</a>
+                    <a href="rental_history.php" class="btn btn-primary">View Rental History</a>
+                    <a href="rentals.php" class="btn btn-primary">Manage Your Rentals</a>
+                </div>
+            </div>
+        <?php endif; ?>
     </section>
+
 </body>
 </html>
